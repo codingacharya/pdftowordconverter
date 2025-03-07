@@ -3,9 +3,15 @@ from pdf2docx import Converter
 import os
 
 def convert_pdf_to_word(pdf_file, output_file):
-    cv = Converter(pdf_file)
+    """Convert uploaded PDF file to Word document."""
+    with open("temp.pdf", "wb") as f:
+        f.write(pdf_file.read())  # Save the uploaded file locally
+
+    cv = Converter("temp.pdf")
     cv.convert(output_file, start=0, end=None)
     cv.close()
+
+    os.remove("temp.pdf")  # Clean up temporary PDF file
 
 def main():
     st.title("PDF to Word Converter")
@@ -27,7 +33,7 @@ def main():
                                    data=f,
                                    file_name="converted.docx",
                                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-            
+
             os.remove(output_file)  # Cleanup after download
 
 if __name__ == "__main__":
